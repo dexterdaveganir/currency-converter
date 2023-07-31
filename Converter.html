@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Currency Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+
+        h1 {
+            color: #007BFF;
+        }
+
+        h2 {
+            margin-top: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        label {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        input {
+            width: 200px;
+            padding: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            padding: 8px 20px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .result-block {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .currency-block {
+            width: 150px;
+            margin: 20px;
+            padding: 10px;
+            background-color: #f2f2f2;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+
+        .currency-name {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .rounded {
+            border-radius: 10px;
+        }
+
+        /* Additional CSS for currency commas */
+        .currency-amount {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Currency Converter</h1>
+    <form>
+        <label for="aed">Enter Amount in AED: </label>
+        <input type="number" id="aed" step="0.01" min="0" required onkeypress="handleKeyPress(event)">
+        <button type="button" onclick="convertCurrency()">Convert</button>
+    </form>
+    <h2>Conversion Result</h2>
+    <div class="result-block" id="conversionResult" style="display: none;">
+        <table>
+            <!-- Headers for conversion result table -->
+            <tr>
+                <th>AED</th>
+                <th>PHP</th>
+                <th>USD</th>
+            </tr>
+            <tr>
+                <td id="aed-result"></td>
+                <td id="php-result"></td>
+                <td id="usd-result"></td>
+            </tr>
+        </table>
+    </div>
+    <h2>Calculation History</h2>
+    <table id="history" style="display: none;">
+        <!-- Headers for calculation history table -->
+        <tr>
+            <th>AED</th>
+            <th>PHP</th>
+            <th>USD</th>
+        </tr>
+    </table>
+
+    <script>
+        function convertCurrency() {
+            const aedAmount = parseFloat(document.getElementById('aed').value);
+
+            // Replace the exchange rates below with the latest rates
+            const aedToPhpRate = 14.50; // 1 AED = 14.50 PHP
+            const aedToUsdRate = 0.27; // 1 AED = 0.27 USD
+
+            const phpAmount = aedAmount * aedToPhpRate;
+            const usdAmount = aedAmount * aedToUsdRate;
+
+            // Update conversion result
+            const conversionResultDiv = document.getElementById('conversionResult');
+            const aedResult = document.getElementById('aed-result');
+            const phpResult = document.getElementById('php-result');
+            const usdResult = document.getElementById('usd-result');
+
+            aedResult.textContent = `${formatCurrency(aedAmount)} AED`;
+            phpResult.textContent = `${formatCurrency(phpAmount)} PHP`;
+            usdResult.textContent = `${formatCurrency(usdAmount)} USD`;
+
+            conversionResultDiv.style.display = 'flex';
+
+            // Update calculation history
+            const historyTable = document.getElementById('history');
+            const calculationHistory = `
+                <tr>
+                    <td class="currency-amount">${formatCurrency(aedAmount)} AED</td>
+                    <td class="currency-amount">${formatCurrency(phpAmount)} PHP</td>
+                    <td class="currency-amount">${formatCurrency(usdAmount)} USD</td>
+                </tr>
+            `;
+           historyTable.innerHTML += calculationHistory;
+            historyTable.style.display = 'table';
+
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                convertCurrency();
+            }
+        }
+
+        // Function to format numbers with currency commas
+        function formatCurrency(number) {
+            return number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        }
+    </script>
+</body>
+</html>
